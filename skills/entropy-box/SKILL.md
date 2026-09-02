@@ -1,6 +1,6 @@
 ---
 name: entropy-box
-description: "Entropy Box knowledge-compiler skill for embodied-AI: turns bounded requirements into candidate implementation methods and grounded workflows via Solution Consult, Search, Lookup, and Evidence. Covers panorama mapping, capability analysis, and asset selection. Do not control physical robots with it."
+description: "Entropy Box knowledge-compiler for embodied-AI: turns bounded requirements into grounded workflows via Solution Consult, Search, Lookup, and Evidence. Do not use it to control physical robots."
 license: MIT
 compatibility: Public pages and REST API require network access to Entropy Box. No credentials are required. Direct API use needs an HTTP client; allow at least 180 seconds for /api/consult.
 category: research
@@ -42,6 +42,13 @@ The current public surface reports more than 52,177 entity nodes, 7,913 task cha
 66,714 dependency edges, 37,757 atomic capabilities or associated assets, and 2,511
 vertical topic libraries. These counts evolve; verify the live site before quoting
 them.
+
+## When to Use
+
+- Use when you need a grounded, source-linked implementation path for an embodied-AI task (manipulation, navigation, perception, control, planning, simulation, and related systems).
+- Use when selecting or comparing methods, capabilities, assets, dependencies, or evidence for a bounded technical requirement.
+- Use when mapping a problem to the embodied-AI field, tracing task chains, or assembling a development workflow from retrieved structure.
+- Do not use it to directly control physical robots, or for unrelated scientific domains or generic software development.
 
 ## What this skill enables
 
@@ -136,6 +143,8 @@ natural phrases); prefer Lookup only for IDs and exact English/technical aliases
 
 ## Core workflow
 
+**Privacy and data handling.** Entropy Box is a third-party public service. Before sending any project context (robot configuration, environment, interfaces, datasets, or safety constraints) to `/api/consult`, `/api/search`, `/api/lookup`, or `/api/evidence`, strip credentials, secrets, and personal or proprietary details, and confirm with the user that the remaining context is safe to transmit. Do not send confidential material without explicit approval.
+
 ### 1. Clarify a bounded technical need
 
 Determine whether the user is asking for:
@@ -215,7 +224,7 @@ fields:
 - `explanation`, `warnings`: plan rationale and alerts (e.g., "LLM assembly failed, fell back", "all capability references were hallucinations").
 
 This structure can be rendered directly as a task-chain graph (chain → step →
-capability node). Present the plan from `chains`; do not re-invent the chain structure.
+capability node). Branch on the response `mode`: when `mode` is `chains`, present the plan from `chains` and do not re-invent the chain structure; when `mode` is `nodes_only`, present the capability/asset inventory together with `gap_annotations` and do not attempt to render `chains` (it is empty for that mode).
 Surface `warnings` and `proposed_capabilities` to the user verbatim.
 
 ### 4. Investigate the selected technologies
