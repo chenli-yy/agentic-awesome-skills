@@ -13,11 +13,11 @@ author: Yuqi Wang
 tags: [robotics, embodied-ai, knowledge-graph, knowledge-compiler, research]
 tools: [claude, codex, cursor, gemini]
 metadata:
-  version: "2.2"
+  version: "2.3"
   skill-author: Yuqi Wang
   repository: https://github.com/chenli-yy/entropy-box-public
   upstream-api-version: "2.0.0"
-  last-reviewed: "2026-09-02"
+  last-reviewed: "2026-09-03"
 ---
 # Entropy Box
 
