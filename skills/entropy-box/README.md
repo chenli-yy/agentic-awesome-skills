@@ -24,11 +24,10 @@ This skill is a community contribution and documents a third-party public servic
 - **Upstream data license:** The Entropy Box knowledge artifacts, public dataset, and
   compiled task chains are released under **Creative Commons Attribution 4.0
   International (CC BY 4.0)** — DOI [10.5281/zenodo.21712178](https://doi.org/10.5281/zenodo.21712178).
-- **This skill's license:** The skill text in this folder is contributed to
-  `agentic-awesome-skills` under **CC BY 4.0** per the repository's `LICENSE-CONTENT`
-  (original documentation and other non-code written content are CC BY 4.0 unless a more
-  specific upstream notice says otherwise). Attribution to the Entropy Box project is
-  required on reuse.
+- **This skill's license:** The contributor grants the submitted skill text in this
+  folder to `agentic-awesome-skills` under the repository's
+  [LICENSE-CONTENT](../../LICENSE-CONTENT), **CC BY 4.0**. Attribution to the Entropy Box
+  project is required on reuse.
 
 When you cite or reuse Entropy Box knowledge in your own work, please credit the Entropy Box
 project and link the public repository / DOI above, in addition to any attribution required

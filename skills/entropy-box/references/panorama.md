@@ -70,4 +70,3 @@ A panorama answer should be selective rather than exhaustive. Include:
 Do not claim that graph size proves correctness or completeness. Counts describe the
 artifact's scale; evidence resolvability, semantic quality, coverage, and freshness are
 separate properties.
-

@@ -59,4 +59,3 @@ provenance, version, and confidence or validation status when available.
 When applying this model elsewhere, first define the domain's stable entities,
 relations, task structures, evidence rules, and admission gates. Do not copy robotics
 labels into a different domain without checking that they represent its real work.
-
