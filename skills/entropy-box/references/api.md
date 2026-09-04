@@ -122,7 +122,29 @@ exact IDs or English/technical aliases for Lookup.
 
 `POST /api/consult`
 
+By default, Consult runs hybrid retrieval (vector + BM25 + one-hop graph expansion +
+rerank) and returns the **structured knowledge graph** for the question — `results`
+(topics/caps/assets with full records and `graph_via` attribution edges), `task_steps`
+(LLM intent decomposition), and `chains` (capability subgraphs discovered during
+retrieval). This is fast and fully grounded; no LLM assembly is performed.
+
+Set `integrate: true` to additionally ask the backend to assemble the candidates into a
+visualization-ready technical chain via `integrate_planner` (the LLM "post-assembly"
+layer). Even then, the graph results are still returned alongside `synthesis`.
+
 ```bash
+# Default: graph only (fast, grounded)
+curl --fail-with-body --silent --show-error \
+  --max-time 60 \
+  -X POST "https://xiangshang.ngrok.app/api/consult" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "question": "Design a simulation-first obstacle-avoidance workflow for a differential-drive ROS 2 robot using a 2D lidar, with 50 ms control latency and no cloud dependency.",
+    "top_k": 30,
+    "rerank": true
+  }'
+
+# With LLM assembly (slower; allow >= 180 s)
 curl --fail-with-body --silent --show-error \
   --max-time 200 \
   -X POST "https://xiangshang.ngrok.app/api/consult" \
@@ -131,7 +153,7 @@ curl --fail-with-body --silent --show-error \
     "question": "Design a simulation-first obstacle-avoidance workflow for a differential-drive ROS 2 robot using a 2D lidar, with 50 ms control latency and no cloud dependency.",
     "top_k": 30,
     "rerank": true,
-    "brief": false
+    "integrate": true
   }'
 ```
 
@@ -144,13 +166,16 @@ Request fields:
 | `rerank` | no | Enable reranking; default `true` |
 | `prev_context` | no | Prior conclusion for a continuing design discussion |
 | `brief` | no | Return only a short chain skeleton; default `false` |
+| `integrate` | no | Enable LLM technical-chain assembly; default `false` (graph only). When `true`, `synthesis` is populated; the graph (`results`/`task_steps`/`chains`) is still returned |
 
-The response can contain `question`, `pool`, `task_steps`, `synthesis`, and
-`latency_ms`. A normal response can take 30-180 seconds. The generated workflow is a
-candidate and must be validated against evidence, interfaces, and user constraints.
+The response always contains `question`, `pool`, `results`, `task_steps`, `chains`, and
+`latency_ms`. When `integrate` is `false` (default), `synthesis` is `null` and the graph
+is the full answer. When `integrate` is `true`, `synthesis` is added (a normal run can
+take 30-180 seconds). The generated workflow is a candidate and must be validated against
+evidence, interfaces, and user constraints.
 
-`synthesis` is a visualization-ready chain structure (assembled by the backend
-integrate_planner — the "post-LLM assembly/visualization layer"):
+`synthesis` (only present when `integrate=true`) is a visualization-ready chain structure
+(assembled by the backend integrate_planner):
 
 - `mode`: `chains` (task-chain solution) or `nodes_only` (capability/asset inventory and gaps);
 - `chains`: list of task chains; each step carries `caps` (real capability ID nodes) and may branch or merge; directly renderable as a task-chain graph;
@@ -164,7 +189,7 @@ skeleton.
 ## Operational checks
 
 - Use `Content-Type: application/json`.
-- Set explicit timeouts; allow at least 180 seconds for consult.
+- Set explicit timeouts; allow at least 180 seconds when `integrate=true`. Graph-only consult (default) is much faster.
 - Log request parameters and returned IDs, but do not log unrelated credentials or
   private project data.
 - Avoid automatic repeated consult calls.
